@@ -1,17 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Trading Simulator</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+    <script src="app.js" defer></script> <!-- Load script asynchronously -->
+    <style>
+        /* Inline styles for specific elements */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #333333;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 1rem;
+        }
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #555555;
+            border-radius: 5px;
+        }
+        main {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .welcome {
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+        .market-data {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .crypto {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            flex: 1;
+            max-width: 200px;
+        }
+        .crypto h3 {
+            margin-bottom: 0.5rem;
+        }
+        form {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .trades {
+            max-width: 800px;
+        }
+        .trades ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        footer {
+            background-color: #333333;
+            padding: 1rem 0;
+            text-align: center;
+            margin-top: auto;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
             <ul>
                 <li><a href="#">Home</a></li>
-                <li><a href="#">Market</a></li>
-                <li><a href="#">Portfolio</a></li>
-                <li><a href="#">Leaderboard</a></li>
+                <li><a href="market.html">Market</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <!-- Removed Leaderboard tab -->
                 <li><a href="#">Settings</a></li>
             </ul>
         </nav>
@@ -23,7 +137,7 @@
         </section>
         <section class="market-overview">
             <h2>Market Overview</h2>
-            <div class="market-data">
+            <div id="marketData" class="market-data">
                 <div class="crypto">
                     <h3>Bitcoin (BTC)</h3>
                     <p>Price: $30,000</p>
@@ -44,8 +158,8 @@
         <section class="trade">
             <h2>Place a Trade</h2>
             <form id="tradeForm">
-                <input type="text" id="cryptoInput" placeholder="Enter cryptocurrency (e.g., BTC)">
-                <input type="number" id="amountInput" placeholder="Enter amount">
+                <input type="text" id="cryptoInput" placeholder="Enter cryptocurrency (e.g., BTC)" required>
+                <input type="number" id="amountInput" placeholder="Enter amount" required>
                 <button type="submit">Trade</button>
             </form>
         </section>
@@ -57,5 +171,5 @@
     <footer>
         <p>&copy; 2024 Crypto Trading Simulator. All rights reserved.</p>
     </footer>
-    <script src="/__/firebase/8.6.1/firebase-app.js"></script>
-    <script src="/__/firebase/8.6.1/firebase-
+</body>
+</html>
