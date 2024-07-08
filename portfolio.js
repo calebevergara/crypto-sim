@@ -1,17 +1,21 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const apiKey = 'CG-FHStL9Tr4ek74ww5h88Brrwm'; // This API key is not required for CoinGecko API
-    const marketDataContainer = document.getElementById('marketData');
+    const portfolioDataContainer = document.getElementById('portfolioData');
 
-    const fetchCryptoData = async () => {
+    // Example portfolio data. Replace with your actual portfolio data fetching logic.
+    const portfolio = [
+        { id: 'bitcoin', name: 'Bitcoin', symbol: 'btc', amount: 0.5 },
+        { id: 'ethereum', name: 'Ethereum', symbol: 'eth', amount: 10 },
+        { id: 'ripple', name: 'Ripple', symbol: 'xrp', amount: 2000 },
+    ];
+
+    const fetchCryptoData = async (ids) => {
         try {
             const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
                 params: {
                     vs_currency: 'usd',
-                    ids: 'bitcoin,ethereum,ripple', // Include more as needed
-                    sparkline: true // To get the sparkline data for charts
+                    ids: ids.join(','),
                 }
             });
-            console.log('Fetched data:', response.data); // Debugging line
             return response.data;
         } catch (error) {
             console.error('Error fetching crypto data:', error);
@@ -19,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const createCryptoElement = (crypto) => {
+    const createPortfolioElement = (crypto, portfolioItem) => {
         const container = document.createElement('div');
         container.classList.add('crypto');
 
@@ -27,13 +31,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         title.textContent = `${crypto.name} (${crypto.symbol.toUpperCase()})`;
         container.appendChild(title);
 
-        const price = document.createElement('p');
-        price.textContent = `Price: $${crypto.current_price.toLocaleString()}`;
-        container.appendChild(price);
+        const amount = document.createElement('p');
+        amount.textContent = `Amount: ${portfolioItem.amount}`;
+        container.appendChild(amount);
 
-        const change = document.createElement('p');
-        change.textContent = `Change: ${crypto.price_change_percentage_24h.toFixed(2)}%`;
-        container.appendChild(change);
+        const value = document.createElement('p');
+        value.textContent = `Value: $${(crypto.current_price * portfolioItem.amount).toLocaleString()}`;
+        container.appendChild(value);
 
         const canvas = document.createElement('canvas');
         container.appendChild(canvas);
@@ -65,18 +69,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         return container;
     };
 
-    const renderMarketData = async () => {
-        const data = await fetchCryptoData();
-        marketDataContainer.innerHTML = ''; // Clear existing data
+    const renderPortfolioData = async () => {
+        const ids = portfolio.map(item => item.id);
+        const data = await fetchCryptoData(ids);
+        portfolioDataContainer.innerHTML = ''; // Clear existing data
         if (data.length === 0) {
-            marketDataContainer.textContent = 'No data available';
+            portfolioDataContainer.textContent = 'No data available';
             return;
         }
         data.forEach(crypto => {
-            const cryptoElement = createCryptoElement(crypto);
-            marketDataContainer.appendChild(cryptoElement);
+            const portfolioItem = portfolio.find(item => item.id === crypto.id);
+            const portfolioElement = createPortfolioElement(crypto, portfolioItem);
+            portfolioDataContainer.appendChild(portfolioElement);
         });
     };
 
-    renderMarketData();
+    renderPortfolioData();
 });

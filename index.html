@@ -6,6 +6,14 @@
     <title>Crypto Trading Simulator</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('authenticated')) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Axios for HTTP requests -->
     <script src="app.js" defer></script> <!-- Load script asynchronously -->
     <style>
         /* Inline styles for specific elements */
@@ -122,10 +130,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><a href="index.html">Home</a></li>
                 <li><a href="market.html">Market</a></li>
                 <li><a href="portfolio.html">Portfolio</a></li>
-                <!-- Removed Leaderboard tab -->
                 <li><a href="#">Settings</a></li>
             </ul>
         </nav>
@@ -138,21 +145,7 @@
         <section class="market-overview">
             <h2>Market Overview</h2>
             <div id="marketData" class="market-data">
-                <div class="crypto">
-                    <h3>Bitcoin (BTC)</h3>
-                    <p>Price: $30,000</p>
-                    <p>Change: +3%</p>
-                </div>
-                <div class="crypto">
-                    <h3>Ethereum (ETH)</h3>
-                    <p>Price: $2,000</p>
-                    <p>Change: +2%</p>
-                </div>
-                <div class="crypto">
-                    <h3>Ripple (XRP)</h3>
-                    <p>Price: $0.50</p>
-                    <p>Change: +5%</p>
-                </div>
+                <!-- Market data will be dynamically inserted here -->
             </div>
         </section>
         <section class="trade">

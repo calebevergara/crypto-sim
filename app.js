@@ -6,6 +6,15 @@ import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+const auth = firebase.auth();
+
+auth.onAuthStateChanged(user => {
+    if (!user && window.location.pathname !== '/login.html' && window.location.pathname !== '/signup.html') {
+        window.location.href = 'login.html';
+    }
+});
+
 const firebaseConfig = {
   apiKey: "AIzaSyADCqo7EBWYjwUkP_AQrF69hqA9hj4NEKc",
   authDomain: "crypto-sim-b4794.firebaseapp.com",
@@ -17,7 +26,9 @@ const firebaseConfig = {
   measurementId: "G-6T46CTMMDK"
 };
 
+
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-  
+

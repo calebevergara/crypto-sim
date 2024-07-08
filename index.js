@@ -1,54 +1,63 @@
-// Constants
-const apiUrl = 'https://api.coingecko.com/api/v3';
-const coinsEndpoint = '/coins/markets';
-const params = {
-    vs_currency: 'usd', // Change currency if needed
-    ids: 'bitcoin,ethereum,ripple', // IDs of cryptocurrencies to fetch
-    order: 'market_cap_desc',
-    per_page: 3,
-    page: 1,
-    sparkline: false,
-    price_change_percentage: '1h,24h,7d'
-};
-
-// Fetch data from CoinGecko API
-async function fetchData() {
-    try {
-        const response = await fetch(`${apiUrl}${coinsEndpoint}?${new URLSearchParams(params)}`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-}
-
-// Update HTML with fetched data
-async function updateMarketData() {
-    const marketDataElement = document.getElementById('marketData');
-    const data = await fetchData();
-    if (!data) return;
-
-    marketDataElement.innerHTML = ''; // Clear previous data
-
-    data.forEach(coin => {
-        const { name, current_price, price_change_percentage_24h } = coin;
-        const cryptoHtml = `
-            <div class="crypto">
-                <h3>${name}</h3>
-                <p>Price: $${current_price.toFixed(2)}</p>
-                <p>Change (24h): ${price_change_percentage_24h.toFixed(2)}%</p>
-            </div>
-        `;
-        marketDataElement.insertAdjacentHTML('beforeend', cryptoHtml);
-    });
-}
-
-// Call function to update market data on page load
 document.addEventListener('DOMContentLoaded', () => {
-    updateMarketData();
-    // Optionally, update every minute or as needed
-    setInterval(updateMarketData, 60000); // Update every 1 minute (60000 milliseconds)
+    const marketDataContainer = document.getElementById('marketData');
+    const tradeForm = document.getElementById('tradeForm');
+    const tradeList = document.getElementById('tradeList');
+
+    // Sample market data. Replace this with real data fetching from your API.
+    const marketData = [
+        { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC', price: 30000, change: 3 },
+        { id: 'ethereum', name: 'Ethereum', symbol: 'ETH', price: 2000, change: 2 },
+        { id: 'ripple', name: 'Ripple', symbol: 'XRP', price: 0.5, change: 5 },
+    ];
+
+    const portfolio = [];
+
+    const renderMarketData = () => {
+        marketDataContainer.innerHTML = '';
+        marketData.forEach(crypto => {
+            const cryptoElement = document.createElement('div');
+            cryptoElement.classList.add('crypto');
+            cryptoElement.innerHTML = `
+                <h3>${crypto.name} (${crypto.symbol})</h3>
+                <p>Price: $${crypto.price.toLocaleString()}</p>
+                <p>Change: ${crypto.change}%</p>
+            `;
+            marketDataContainer.appendChild(cryptoElement);
+        });
+    };
+
+    const renderTrades = () => {
+        tradeList.innerHTML = '';
+        portfolio.forEach(trade => {
+            const tradeElement = document.createElement('li');
+            tradeElement.textContent = `Traded ${trade.amount} of ${trade.symbol.toUpperCase()} at $${trade.price.toLocaleString()} each`;
+            tradeList.appendChild(tradeElement);
+        });
+    };
+
+    const handleTrade = (e) => {
+        e.preventDefault();
+        const cryptoInput = document.getElementById('cryptoInput').value.trim().toLowerCase();
+        const amountInput = parseFloat(document.getElementById('amountInput').value.trim());
+
+        const crypto = marketData.find(c => c.symbol.toLowerCase() === cryptoInput);
+        if (!crypto) {
+            alert('Cryptocurrency not found in market data.');
+            return;
+        }
+
+        const trade = {
+            symbol: crypto.symbol,
+            amount: amountInput,
+            price: crypto.price
+        };
+
+        portfolio.push(trade);
+        renderTrades();
+        tradeForm.reset();
+    };
+
+    tradeForm.addEventListener('submit', handleTrade);
+
+    renderMarketData();
 });

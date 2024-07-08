@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Market</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('authenticated')) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Axios for HTTP requests -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for graphs -->
     <script src="market.js" defer></script> <!-- Load script asynchronously -->
     <style>
         /* Inline styles for specific elements */
@@ -75,6 +83,10 @@
             text-align: center;
             margin-top: auto;
             width: 100%;
+        }
+        canvas {
+            width: 100%;
+            height: 200px;
         }
     </style>
 </head>
