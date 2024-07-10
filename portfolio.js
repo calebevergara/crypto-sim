@@ -1,12 +1,11 @@
+// portfolio.js (continued)
+import CryptoPortfolio from './portfolio.js';
+
 document.addEventListener("DOMContentLoaded", async () => {
     const portfolioDataContainer = document.getElementById('portfolioData');
+    const portfolio = new CryptoPortfolio();
 
-    // Example portfolio data. Replace with your actual portfolio data fetching logic.
-    const portfolio = [
-        { id: 'bitcoin', name: 'Bitcoin', symbol: 'btc', amount: 0.5 },
-        { id: 'ethereum', name: 'Ethereum', symbol: 'eth', amount: 10 },
-        { id: 'ripple', name: 'Ripple', symbol: 'xrp', amount: 2000 },
-    ];
+    await portfolio.initialize();
 
     const fetchCryptoData = async (ids) => {
         try {
@@ -32,11 +31,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         container.appendChild(title);
 
         const amount = document.createElement('p');
-        amount.textContent = `Amount: ${portfolioItem.amount}`;
+        amount.textContent = `Amount: ${portfolioItem.quantity}`;
         container.appendChild(amount);
 
         const value = document.createElement('p');
-        value.textContent = `Value: $${(crypto.current_price * portfolioItem.amount).toLocaleString()}`;
+        value.textContent = `Value: $${(crypto.current_price * portfolioItem.quantity).toLocaleString()}`;
         container.appendChild(value);
 
         const canvas = document.createElement('canvas');
@@ -70,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const renderPortfolioData = async () => {
-        const ids = portfolio.map(item => item.id);
+        const ids = Object.keys(portfolio.holdings);
         const data = await fetchCryptoData(ids);
         portfolioDataContainer.innerHTML = ''; // Clear existing data
         if (data.length === 0) {
@@ -78,11 +77,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         data.forEach(crypto => {
-            const portfolioItem = portfolio.find(item => item.id === crypto.id);
+            const portfolioItem = portfolio.holdings[crypto.id];
             const portfolioElement = createPortfolioElement(crypto, portfolioItem);
             portfolioDataContainer.appendChild(portfolioElement);
         });
     };
 
     renderPortfolioData();
+
+    // Periodically update portfolio prices and re-render
+    setInterval(async () => {
+        await portfolio.updatePrices();
+        renderPortfolioData();
+    }, 3600000); // Update every hour
 });
